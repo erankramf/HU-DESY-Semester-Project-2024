@@ -23,7 +23,7 @@ async def ping_server():
 async def print_client() -> str:
   return await ping_server()
   
-async def get_params_by_telescope_name(TelName : str) -> list[str]:
+async def db_get_params_by_telescope_name(TelName : str) -> list[str]:
   params = await telescopes_collection.aggregate(  [
     { '$match': { 'Telescope': TelName } },
     { '$group': { '_id': '$Parameter' } }
@@ -31,7 +31,7 @@ async def get_params_by_telescope_name(TelName : str) -> list[str]:
   return list(map(lambda tel: tel["_id"],params))
   
   
-async def get_telescopes() -> list[str]:
+async def db_get_telescopes() -> list[str]:
   telescopes = await telescopes_collection.aggregate([
     {
         '$group': {
