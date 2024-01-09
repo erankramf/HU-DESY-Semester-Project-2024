@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight } from 'react-feather';
 
-const CollapsibleComponent = ({ title, children }) => {
+const CollapsibleComponent = ({ title , children } : { title:any , children:any } ) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const toggleCollapse = () => {
