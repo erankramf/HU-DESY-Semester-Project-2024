@@ -1,0 +1,9 @@
+.telescope-block {
+    padding: 8px;
+    margin: 4px;
+    cursor: pointer;
+  }
+  
+  .telescope-selected {
+    background-color: gray;
+  }
