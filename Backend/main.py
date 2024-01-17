@@ -1,7 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from Database import db_get_telescopes, print_client, db_get_params_by_telescope_name
+from Database import db_get_telescopes, db_get_params_by_telescope_name
+
+#notiz: ich implementiere das jz schon so, dass ich von hier aus erstmal die service funktionen rufe,
+#obwohl die ja theoretisch noch nicht da sind 
+from Service import{
+    service_get_params_by_telescope_name,
+    service_get_telescopes,
+}
+
+from Database import print_client
 
 app = FastAPI()
 
@@ -22,13 +31,17 @@ async def getter():
 
 @app.get("/Telescopes/{telName}")
 async def api_get_params(telName:str):
-    response = await db_get_params_by_telescope_name(telName)
-    return response
+    response = await service_get_params_by_telescope_name(telName)
+    if response:
+        return response
+    raise HTTPException(404, f"couldn't find Telescope Parameters")
 
 @app.get("/Telescopes")
 async def api_get_telescopes():
-    response = await db_get_telescopes()
-    return response
+    response = await service_get_telescopes()
+    if response:
+        return response
+    raise HTTPException(404, f"couldn't find Telescope")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
