@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from Database import db_get_telescopes, print_client, db_get_params_by_telescope_name
+from Database import db_get_telescopes, print_client, db_get_params_by_telescope_name,db_get_versions_by_telescope_and_param
 
 app = FastAPI()
 
@@ -28,6 +28,11 @@ async def api_get_params(telName:str):
 @app.get("/Telescopes")
 async def api_get_telescopes():
     response = await db_get_telescopes()
+    return response
+
+@app.get("/Versions/{telName}/{param}")
+async def get_telescope_versions(tel_name: str, param: str):
+    response = await db_get_versions_by_telescope_and_param(tel_name, param)
     return response
 
 # Press the green button in the gutter to run the script.
