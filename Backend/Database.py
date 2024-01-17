@@ -40,3 +40,10 @@ async def db_get_telescopes() -> list[str]:
     }
   ]).to_list(None)
   return list(map(lambda tel: tel["_id"],telescopes))
+
+async def db_get_versions_by_telescope_and_param(TelName: str, Param: str) -> list[str]:
+    versions = await telescopes_collection.aggregate([
+        { '$match': { 'Telescope': TelName, 'Parameter': Param } },
+        { '$group': { '_id': '$Version' } }
+    ]).to_list(None)
+    return list(map(lambda tel: tel["_id"], versions))
