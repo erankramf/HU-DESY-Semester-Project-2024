@@ -22,6 +22,7 @@ export const DataSelector = (props : Props) =>{
 
     const pickedTelescope = (telName:string) => {
       setTelescopeName(telName);
+      setParamsList([]);
       getParams(telName).then(value =>{
         console.log(value);
         setParamsList(value.data);
