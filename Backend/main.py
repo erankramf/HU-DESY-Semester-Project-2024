@@ -30,7 +30,7 @@ async def api_get_telescopes():
     response = await db_get_telescopes()
     return response
 
-@app.get("/Versions/{telName}/{param}")
+@app.get("/Telescopes/{telName}/{param}")
 async def get_telescope_versions(tel_name: str, param: str):
     response = await db_get_versions_by_telescope_and_param(tel_name, param)
     return response
