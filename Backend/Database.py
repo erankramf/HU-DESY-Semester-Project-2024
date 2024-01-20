@@ -45,3 +45,11 @@ async def db_get_telescopes() -> List[str]:
     except Exception as e:
         print(f"Error at Database: {e}")
         return repr(e)
+
+async def db_get_versions_by_telescope_and_param(TelName: str, Param: str) -> list[str]:
+    versions = await telescopes_collection.aggregate([
+        { '$match': { 'Telescope': TelName, 'Parameter': Param } },
+        { '$group': { '_id': '$Version' } }
+    ]).to_list(None)
+    return list(map(lambda tel: tel["_id"], versions))
+

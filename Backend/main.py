@@ -2,12 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from Service import{
-    service_get_params_by_telescope_name,
-    service_get_telescopes,
-}
-
-from Database import print_client
+from Database import db_get_telescopes, print_client, db_get_params_by_telescope_name,db_get_versions_by_telescope_and_param
 
 app = FastAPI()
 
@@ -39,6 +34,11 @@ async def api_get_telescopes():
     if response:
         return response
     raise HTTPException(404, f"couldn't find Telescope")
+
+@app.get("/Telescopes/{telName}/{param}")
+async def get_telescope_versions(tel_name: str, param: str):
+    response = await db_get_versions_by_telescope_and_param(tel_name, param)
+    return response
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
