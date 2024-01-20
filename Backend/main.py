@@ -1,10 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from Database import db_get_telescopes, db_get_params_by_telescope_name
 
-#notiz: ich implementiere das jz schon so, dass ich von hier aus erstmal die service funktionen rufe,
-#obwohl die ja theoretisch noch nicht da sind 
 from Service import{
     service_get_params_by_telescope_name,
     service_get_telescopes,

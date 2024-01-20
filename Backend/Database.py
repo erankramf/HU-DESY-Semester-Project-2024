@@ -33,7 +33,6 @@ async def db_get_params_by_telescope_name(TelName : str) -> List[str]:
     return list(map(lambda tel: tel["_id"],params))
   except Exception as e:
         print(f"Error at Database: {e}")
-        #traceback.print_exc()    Print the traceback information
         return repr(e)
   
 
@@ -45,5 +44,4 @@ async def db_get_telescopes() -> List[str]:
         return list(map(lambda tel: tel["_id"], telescopes))
     except Exception as e:
         print(f"Error at Database: {e}")
-        #traceback.print_exc())    Print the traceback information
         return repr(e)
