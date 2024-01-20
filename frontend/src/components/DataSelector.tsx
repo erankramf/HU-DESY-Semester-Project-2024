@@ -7,26 +7,34 @@ interface Props {
 
 }
 export const DataSelector = (props : Props) =>{
-    const [text, setText] = useState([""])
-    const [telescopeName, setTelescopeName] = useState("")
-    
-    const getT = () => {
+    const [telescopesList, setTelescopesList] = useState([""]);
+    const [telescopeName, setTelescopeName] = useState("");
+    const [parameterName, setParameterName] = useState("");
+    const [paramsList, setParamsList] = useState([""]);
+
+    const getTelescopeList = () => {
       getTelescopes().then(value=>{
         console.log(value)
-        setText(value.data);
+        setTelescopesList(value.data);
       }).catch(err =>
         console.log(err));
       }
 
-    const getP = () => {
-      getParams(telescopeName).then(value=>{
-        console.log(value)
-        setText(value.data);
+    const pickedTelescope = (telName:string) => {
+      setTelescopeName(telName);
+      getParams(telName).then(value =>{
+        console.log(value);
+        setParamsList(value.data);
       }).catch(err =>
         console.log(err));
-    };
+    } 
+
+    const pickedParam = (paramName:string) =>{
+      setParameterName(paramName);
+      //Add call to get versions
+    }
     
-    useEffect(() => getT(),[]);
+    useEffect(() => getTelescopeList(),[]);
 
     return <>
 
@@ -36,7 +44,7 @@ export const DataSelector = (props : Props) =>{
                 flexDirection: "column",
                 overflow: "hidden",
                 }}>
-                <ClickableList items={text} title='Telescopes' onChoseItem={() => {return null}  } >
+                <ClickableList items={telescopesList} title='Telescopes' onChoseItem={pickedTelescope} >
                 </ClickableList>
             </Grid>
             <Grid item xs={4} sx={{height:1,
@@ -44,7 +52,7 @@ export const DataSelector = (props : Props) =>{
                 flexDirection: "column",
                 overflow: "hidden",
                 }}>
-                <ClickableList items={[]} title='Parameters' onChoseItem={() => {return null}  } >
+                <ClickableList items={paramsList} title='Parameters' onChoseItem={() => {return null}  } >
                 </ClickableList>
             </Grid>
             <Grid item xs={4} sx={{height:1,
@@ -52,7 +60,7 @@ export const DataSelector = (props : Props) =>{
                 flexDirection: "column",
                 overflow: "hidden",
                 }}>
-                <ClickableList items={text} title='Telescopes' onChoseItem={() => {return null}  } >
+                <ClickableList items={telescopesList} title='Telescopes' onChoseItem={() => {return null}  } >
                 </ClickableList>
             </Grid>
         </Grid>
