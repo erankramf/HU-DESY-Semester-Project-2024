@@ -52,10 +52,7 @@ async def db_get_versions_by_telescope_and_param(TelName: str, Param: str) -> li
     return list(map(lambda tel: tel["_id"], versions))
 
 async def db_get_data(TelName : str, Param : str, Version : str) -> dict:
-  try:
-    data = await telescopes_collection.find_one({'Telescope': TelName, 'Parameter': Param, 'Version': Version})
-    # Convert ObjectId to string for JSON serialization
-    data['_id'] = str(data['_id'])
-    return JSONResponse(content=data)
-  except Exception as e:
-    return JSONResponse(content={"message": "Document not found in Database"}, status_code=404)
+  data = await telescopes_collection.find_one({'Telescope': TelName, 'Parameter': Param, 'Version': Version})
+  # Convert ObjectId to string for JSON serialization
+  data['_id'] = str(data['_id'])
+  return JSONResponse(content=data)
