@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from Database import db_get_telescopes, print_client, db_get_params_by_telescope_name,db_get_versions_by_telescope_and_param
+from Database import db_get_telescopes, print_client, db_get_params_by_telescope_name,db_get_versions_by_telescope_and_param, db_get_data
 
 app = FastAPI()
 
@@ -34,6 +34,15 @@ async def api_get_telescopes():
 async def get_telescope_versions(tel_name: str, param: str):
     response = await db_get_versions_by_telescope_and_param(tel_name, param)
     return response
+
+@app.get("/Telescopes/{telName}/{param}/{version}")
+async def get_data(telName: str, param: str, version: str):
+    response = await db_get_data(telName, param, version)
+    if response:
+        return response
+    else:
+        raise HTTPException(404, f"couldn't find Document")
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
