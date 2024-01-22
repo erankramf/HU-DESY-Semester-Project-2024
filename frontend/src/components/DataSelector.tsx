@@ -81,17 +81,9 @@ export const DataSelector = (props : Props) =>{
                 flexDirection: "column",
                 overflow: "hidden",
                 }}>
-                <ClickableList items={versionList} title='Telescopes' onChoseItem={pickedVersion} >
+                <ClickableList items={versionList} title='Versions' onChoseItem={pickedVersion} >
                 </ClickableList>
             </Grid>
         </Grid>
-        {/* <Box sx={{height:1, width:1/3,
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-            }}>
-            <ClickableList items={['1','2','3','4','5','6','7','8','9','10','12','13','14','15','16']} title='Telescopes' onChoseItem={() => {return null}  } >
-            </ClickableList>
-        </Box> */}
     </>
 }
