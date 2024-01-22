@@ -1,5 +1,8 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.server_api import ServerApi
+from fastapi.responses import JSONResponse
+from bson import ObjectId
+
 
 
 uri = "mongodb://read:XgFXpjCQZznKddf4KvtW@cta-simpipe-protodb.zeuthen.desy.de/?authMechanism=DEFAULT&authSource=admin&tls=true"
@@ -43,4 +46,17 @@ async def db_get_telescopes() -> list[str]:
         }
     }
   ]).to_list(None)
-  return sorted(list(map(lambda tel: tel["_id"],telescopes)))
+  return list(map(lambda tel: tel["_id"],telescopes))
+
+async def db_get_versions_by_telescope_and_param(TelName: str, Param: str) -> list[str]:
+    versions = await telescopes_collection.aggregate([
+        { '$match': { 'Telescope': TelName, 'Parameter': Param } },
+        { '$group': { '_id': '$Version' } }
+    ]).to_list(None)
+    return list(map(lambda tel: tel["_id"], versions))
+
+async def db_get_data(TelName : str, Param : str, Version : str) -> dict:
+  data = await telescopes_collection.find_one({'Telescope': TelName, 'Parameter': Param, 'Version': Version})
+  # Convert ObjectId to string for JSON serialization
+  data['_id'] = str(data['_id'])
+  return JSONResponse(content=data)
