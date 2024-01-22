@@ -11,3 +11,6 @@ export const getTelescopes = () => {
 export const getParams = (telescopeName : string) =>{
     return instance.get(`/Telescopes/${telescopeName}`);
 }
+export const getData = (telName : string, param : string, version : string) => {
+    return instance.get(`/Telescopes/${telName}/${param}/${version}`)
+}
