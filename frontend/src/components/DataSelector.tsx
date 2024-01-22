@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react"
 import { ClickableList } from "./ClickableList"
-import { getParams, getTelescopes } from "../api/Service"
+import { getData, getParams, getTelescopes, getVersions } from "../api/Service"
 import { Box, Grid } from "@mui/material"
 
 interface Props {
-
+  onGotData: (data:any) => void 
 }
 export const DataSelector = (props : Props) =>{
     const [telescopesList, setTelescopesList] = useState([""]);
     const [telescopeName, setTelescopeName] = useState("");
     const [parameterName, setParameterName] = useState("");
     const [paramsList, setParamsList] = useState([""]);
+    const [versionName, setVersionName] = useState("");
+    const [versionList, setVersionList] = useState([""]);
 
     const getTelescopeList = () => {
       getTelescopes().then(value=>{
@@ -23,6 +25,8 @@ export const DataSelector = (props : Props) =>{
     const pickedTelescope = (telName:string) => {
       setTelescopeName(telName);
       setParamsList([]);
+      setVersionList([]);
+      props.onGotData("");
       getParams(telName).then(value =>{
         console.log(value);
         setParamsList(value.data);
@@ -32,7 +36,23 @@ export const DataSelector = (props : Props) =>{
 
     const pickedParam = (paramName:string) =>{
       setParameterName(paramName);
-      //Add call to get versions
+      setVersionList([]);
+      props.onGotData("");
+      getVersions(telescopeName,paramName).then(value =>{
+        console.log(value);
+        setVersionList(value.data);
+      }).catch(err=>
+        console.log(err));
+    }
+
+    const pickedVersion = (verName:string) =>{
+      setVersionName(verName);
+      getData(telescopeName, parameterName, verName).then( value =>{
+        console.log(value);
+        console.log(JSON.stringify(value.data, null, 2));
+        props.onGotData(JSON.stringify(value.data, null, 2));
+      }).catch(err =>
+        console.log(err));
     }
     
     useEffect(() => getTelescopeList(),[]);
@@ -53,7 +73,7 @@ export const DataSelector = (props : Props) =>{
                 flexDirection: "column",
                 overflow: "hidden",
                 }}>
-                <ClickableList items={paramsList} title='Parameters' onChoseItem={() => {return null}  } >
+                <ClickableList items={paramsList} title='Parameters' onChoseItem={pickedParam} >
                 </ClickableList>
             </Grid>
             <Grid item xs={4} sx={{height:1,
@@ -61,7 +81,7 @@ export const DataSelector = (props : Props) =>{
                 flexDirection: "column",
                 overflow: "hidden",
                 }}>
-                <ClickableList items={telescopesList} title='Telescopes' onChoseItem={() => {return null}  } >
+                <ClickableList items={versionList} title='Telescopes' onChoseItem={pickedVersion} >
                 </ClickableList>
             </Grid>
         </Grid>
