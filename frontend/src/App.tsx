@@ -1,41 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
-
-import CollapsibleComponent from './components/collapsible'
-import { getParams, getTelescopes } from './api/Service'
+import { Box, Container, Grid, createStyles } from '@mui/material'
+import { DataSelector } from './components/DataSelector'
+import { bgcolor } from '@mui/system'
 //South-LST-D
+const useStyles = createStyles({
+  blah:{
+  }
+})
 function App() {
-  const [text, setText] = useState("")
-  const [telescopeName, setTelescopeName] = useState("")
-  const getT = () => {
-    getTelescopes().then(value=>{
-      console.log(value)
-      setText(value.data);
-    }).catch(err =>
-      console.log(err));
-    }
-  const getP = () => {
-    getParams(telescopeName).then(value=>{
-      console.log(value)
-      setText(value.data);
-    }).catch(err =>
-      console.log(err));
-  };
+  const [text, setText] = useState("");
   return (
     <>
-        <CollapsibleComponent title="hello" children="world"></CollapsibleComponent>
-
-        <div onClick={getT} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <span style={{ marginRight: '10px' }}>Get Telescopes</span>
-        </div>
-
-        <div onClick={getP} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-          <span style={{ marginRight: '10px' }}>Get Params</span>
-        </div>
-        <input type="text" value={telescopeName} onChange={event => setTelescopeName(event.target.value)}></input>
-        <h1>{text}</h1>
+    <Container sx={{height:'30vh', bgcolor:'background.paper'}}>
+      <DataSelector onGotData={(data) => setText(data as string)}></DataSelector>
+    </Container>
+    <Container sx={{bgcolor:'background.paper', p:3}}>
+      {text}
+    </Container>
+    {/* <Grid container  sx={{p:2, height:'30vh',bgcolor:'background.paper'}}>
+    </Grid> */}
     </>
   )
 }

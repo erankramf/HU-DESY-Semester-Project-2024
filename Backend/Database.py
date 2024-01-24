@@ -32,13 +32,17 @@ async def db_get_params_by_telescope_name(TelName : str) -> list[str]:
     { '$group': { '_id': '$Parameter' } }
   ]).to_list(None)
   return list(map(lambda tel: tel["_id"],params))
-  
+
   
 async def db_get_telescopes() -> list[str]:
   telescopes = await telescopes_collection.aggregate([
     {
-        '$group': {
+      '$group': {
             '_id': '$Telescope'
+        },
+    }, {
+        '$sort': {
+            'Telescope': 1
         }
     }
   ]).to_list(None)
