@@ -55,8 +55,20 @@ async def db_get_versions_by_telescope_and_param(TelName: str, Param: str) -> li
     ]).to_list(None)
     return list(map(lambda tel: tel["_id"], versions))
 
-async def db_get_data(TelName : str, Param : str, Version : str) -> dict:
+# old db_get_data function
+async def db_get_data_old(TelName : str, Param : str, Version : str) -> dict:
   data = await telescopes_collection.find_one({'Telescope': TelName, 'Parameter': Param, 'Version': Version})
   # Convert ObjectId to string for JSON serialization
   data['_id'] = str(data['_id'])
   return JSONResponse(content=data)
+
+async def db_get_data(TelName : str, Param : str, Versions : list[str] ) -> list[dict[str, any]]:
+  all_data = []
+  for version in Versions:
+    data = await telescopes_collection.find_one({'Telescope' : TelName, 'Parameter' : Param, 'Version' : version})
+    all_data.append(data)
+
+  for data in all_data:
+    data['_id'] = str(data['_id'])
+  
+  return JSONResponse(content=all_data)

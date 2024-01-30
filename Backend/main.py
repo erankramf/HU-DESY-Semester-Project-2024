@@ -1,7 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-from Database import db_get_telescopes, print_client, db_get_params_by_telescope_name,db_get_versions_by_telescope_and_param, db_get_data
+from fastapi.openapi.utils import get_openapi
+import uvicorn, yaml, os, logging
+from Database import db_get_telescopes, print_client, db_get_params_by_telescope_name, db_get_versions_by_telescope_and_param, db_get_data_old, db_get_data
+
 
 app = FastAPI()
 
@@ -14,6 +16,13 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*']
 )
+
+#this is stuff for the list-parameter in the swagger ui, to make sure we can receive it correctly
+cd = os.path.dirname(os.path.abspath(__file__))
+yaml_path = os.path.join(cd, "swagger_list.yaml")
+
+with open(yaml_path, "r") as file:
+    openapi_spec = yaml.safe_load(file)
 
 @app.get("/PingDatabase")
 async def getter():
@@ -35,15 +44,21 @@ async def get_telescope_versions(tel_name: str, param: str):
     response = await db_get_versions_by_telescope_and_param(tel_name, param)
     return response
 
-@app.get("/Telescopes/{telName}/{param}/{version}")
-async def get_data(telName: str, param: str, version: str):
-    response = await db_get_data(telName, param, version)
-    if response:
-        return response
-    else:
-        raise HTTPException(404, f"couldn't find Document")
+# this is the old get_data function which only took one version as a string
+# @app.get("/Telescopes/{telName}/{param}/{version}")
+# async def get_data_old(telName: str, param: str, version: str):
+#     response = await db_get_data_old(telName, param, version)
+#     if response:
+#         return response
+#     else:
+#         raise HTTPException(404, f"couldn't find Document")
 
+#this the new one, takes a list oft versions
+@app.get("/Telescopes/{telName}/{param}/Versions")
+async def get_data(telName: str, param: str, Versions: list[str] = Query(...)):
+    response = await db_get_data(telName, param, Versions)
+    return response
 
 #Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
