@@ -38,10 +38,8 @@ async def get_telescope_versions(tel_name: str, param: str):
 @app.get("/Telescopes/{telName}/{param}/{version}")
 async def get_data(telName: str, param: str, version: str):
     response = await db_get_data(telName, param, version)
-    if response:
-        return response
-    else:
-        raise HTTPException(404, f"couldn't find Document")
+    return response
+
 
 
 #Press the green button in the gutter to run the script.
