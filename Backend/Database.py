@@ -3,6 +3,8 @@ from pymongo.server_api import ServerApi
 from fastapi.responses import JSONResponse
 from bson import ObjectId
 
+from Backend.Logger import Log, LogLevel
+
 
 
 uri = "mongodb://read:XgFXpjCQZznKddf4KvtW@cta-simpipe-protodb.zeuthen.desy.de/?authMechanism=DEFAULT&authSource=admin&tls=true"
@@ -12,6 +14,9 @@ client = AsyncIOMotorClient(uri, server_api=ServerApi('1'))
 db = client["CTA-Simulation-Model"]
 telescopes_collection = db["telescopes"]
 
+class DbException(Exception):
+    pass
+
 async def ping_server():
   # Send a ping to confirm a successful connection
   try:
@@ -19,44 +24,61 @@ async def ping_server():
     print("Pinged your deployment. You successfully connected to MongoDB!")
     return "Pinged your deployment. You successfully connected to MongoDB!"
   except Exception as e:
-    print(e)
-    return repr(e)
+    Log(LogLevel.Critical,e)
+    raise DbException(e)
 
 
 async def print_client() -> str:
   return await ping_server()
   
 async def db_get_params_by_telescope_name(TelName : str) -> list[str]:
-  params = await telescopes_collection.aggregate(  [
-    { '$match': { 'Telescope': TelName } },
-    { '$group': { '_id': '$Parameter' } }
-  ]).to_list(None)
-  return list(map(lambda tel: tel["_id"],params))
+  try:
+    params = await telescopes_collection.aggregate(  [
+      { '$match': { 'Telescope': TelName } },
+      { '$group': { '_id': '$Parameter' } }
+    ]).to_list(None)
+    return list(map(lambda tel: tel["_id"],params))
+  except Exception as e:
+    Log(e)
+    raise DbException(LogLevel.Critical,e)
 
   
 async def db_get_telescopes() -> list[str]:
-  telescopes = await telescopes_collection.aggregate([
-    {
-      '$group': {
-            '_id': '$Telescope'
-        },
-    }, {
-        '$sort': {
-            'Telescope': 1
-        }
-    }
-  ]).to_list(None)
-  return list(map(lambda tel: tel["_id"],telescopes))
+  try:
+
+    telescopes = await telescopes_collection.aggregate([
+      {
+        '$group': {
+              '_id': '$Telescope'
+          },
+      }, {
+          '$sort': {
+              'Telescope': 1
+          }
+      }
+    ]).to_list(None)
+    return list(map(lambda tel: tel["_id"],telescopes))
+  except Exception as e:
+    Log(e)
+    raise DbException(LogLevel.Critical,e)
 
 async def db_get_versions_by_telescope_and_param(TelName: str, Param: str) -> list[str]:
-    versions = await telescopes_collection.aggregate([
-        { '$match': { 'Telescope': TelName, 'Parameter': Param } },
-        { '$group': { '_id': '$Version' } }
-    ]).to_list(None)
-    return list(map(lambda tel: tel["_id"], versions))
+    try:
+      versions = await telescopes_collection.aggregate([
+          { '$match': { 'Telescope': TelName, 'Parameter': Param } },
+          { '$group': { '_id': '$Version' } }
+      ]).to_list(None)
+      return list(map(lambda tel: tel["_id"], versions))
+    except Exception as e:
+      Log(e)
+      raise DbException(LogLevel.Critical,e)
 
 async def db_get_data(TelName : str, Param : str, Version : str) -> dict:
-  data = await telescopes_collection.find_one({'Telescope': TelName, 'Parameter': Param, 'Version': Version})
-  # Convert ObjectId to string for JSON serialization
-  data['_id'] = str(data['_id'])
-  return JSONResponse(content=data)
+  try:
+    data = await telescopes_collection.find_one({'Telescope': TelName, 'Parameter': Param, 'Version': Version})
+    # Convert ObjectId to string for JSON serialization
+    data['_id'] = str(data['_id'])
+    return JSONResponse(content=data)
+  except Exception as e:
+    Log(e)
+    raise DbException(LogLevel.Critical,e)
