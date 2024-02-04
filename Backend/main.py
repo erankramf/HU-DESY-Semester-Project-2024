@@ -31,7 +31,7 @@ async def api_get_telescopes():
     response = await serv_get_telescopes()
     return response
 
-@app.get("/Telescopes/{telName}/{param}")
+@app.get("/Telescopes/{tel_name}/{param}")
 async def get_telescope_versions(tel_name: str, param: str):
     response = await serv_get_versions_by_telescope_and_param(tel_name, param)
     return response
@@ -45,6 +45,6 @@ async def get_data(telName: str, param: str, version: str):
         raise HTTPException(404, f"couldn't find Document")
 
 
-# Press the green button in the gutter to run the script.
+#Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
