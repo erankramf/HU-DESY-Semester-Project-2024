@@ -63,10 +63,9 @@ async def db_get_data_old(TelName : str, Param : str, Version : str) -> dict:
   return JSONResponse(content=data)
 
 async def db_get_data(TelName : str, Param : str, Versions : list[str] ) -> list[dict[str, any]]:
-  all_data = []
-  for version in Versions:
-    data = await telescopes_collection.find_one({'Telescope' : TelName, 'Parameter' : Param, 'Version' : version})
-    all_data.append(data)
+  data = telescopes_collection.find({'Telescope' : TelName, 'Parameter' : Param, 'Version': {'$in': Versions}})
+  
+  all_data = await data.to_list(length = None)
 
   for data in all_data:
     data['_id'] = str(data['_id'])
