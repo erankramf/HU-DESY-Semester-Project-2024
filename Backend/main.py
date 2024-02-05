@@ -44,16 +44,6 @@ async def get_telescope_versions(tel_name: str, param: str):
     response = await db_get_versions_by_telescope_and_param(tel_name, param)
     return response
 
-# this is the old get_data function which only took one version as a string
-# @app.get("/Telescopes/{telName}/{param}/{version}")
-# async def get_data_old(telName: str, param: str, version: str):
-#     response = await db_get_data_old(telName, param, version)
-#     if response:
-#         return response
-#     else:
-#         raise HTTPException(404, f"couldn't find Document")
-
-#this the new one, takes a list oft versions
 @app.get("/Telescopes/{telName}/{param}/Versions")
 async def get_data(telName: str, param: str, Versions: list[str] = Query(...)):
     response = await db_get_data(telName, param, Versions)
