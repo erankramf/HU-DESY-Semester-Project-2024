@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { ClickableList } from "./ClickableList"
 import { getData, getParams, getTelescopes, getVersions } from "../api/Service"
 import { Box, Grid } from "@mui/material"
+import { ClickableListV } from "./ClickableListV"
 
 interface Props {
   onGotData: (data: any) => void
@@ -45,7 +46,7 @@ export const DataSelector = (props: Props) => {
       console.log(err));
   }
 
-  const pickedVersion = (verNames: string[]) => {
+  const pickedVersions = (verNames: string[]) => {
     setVersionNames(verNames);
     getData(telescopeName, parameterName, verNames).then(value => {
       console.log(value);
@@ -84,8 +85,8 @@ export const DataSelector = (props: Props) => {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        <ClickableList items={versionList} title='Versions' onChoseItem={pickedVersion} >
-        </ClickableList>
+        <ClickableListV items={versionList} title='Versions' onChoseItems={pickedVersions} >
+        </ClickableListV>
       </Grid>
     </Grid>
   </>
