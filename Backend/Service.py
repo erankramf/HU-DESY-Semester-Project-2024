@@ -15,6 +15,6 @@ async def serv_get_versions_by_telescope_and_param(telescope_name: str, param: s
     return versions
 
 
-async def serv_get_data(telescope_name: str, param: str , version: str):
-    data = await db_get_data(telescope_name, param, version)
+async def serv_get_data(telescope_name: str, param: str , Versions: list[str]):
+    data = await db_get_data(telescope_name, param, Versions)
     return data

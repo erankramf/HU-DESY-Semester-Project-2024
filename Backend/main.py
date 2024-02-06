@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi.openapi.utils import get_openapi
 import uvicorn, yaml, os, logging
-from Database import print_client, db_get_data
+from Database import print_client
 from Service import serv_get_telescopes, serv_get_params_by_telescope_name, serv_get_versions_by_telescope_and_param, serv_get_data
 
 app = FastAPI()
@@ -47,7 +47,7 @@ async def get_telescope_versions(tel_name: str, param: str):
 
 @app.get("/Telescopes/{telName}/{param}/Versions")
 async def get_data(telName: str, param: str, Versions: list[str] = Query(...)):
-    response = await db_get_data(telName, param, Versions)
+    response = await serv_get_data(telName, param, Versions)
     return response
 
 #Press the green button in the gutter to run the script.
