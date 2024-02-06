@@ -75,10 +75,15 @@ async def db_get_versions_by_telescope_and_param(TelName: str, Param: str) -> li
 
 async def db_get_data(TelName : str, Param : str, Version : str) -> dict:
   try:
-    data = await telescopes_collection.find_one({'Telescope': TelName, 'Parameter': Param, 'Version': Version})
-    # Convert ObjectId to string for JSON serialization
-    data['_id'] = str(data['_id'])
-    return JSONResponse(content=data)
+    data = telescopes_collection.find({'Telescope' : TelName, 'Parameter' : Param, 'Version': {'$in': Versions}})
+
+    all_data = await data.to_list(length = None)
+
+    for data in all_data:
+      data['_id'] = str(data['_id'])
+
+    return JSONResponse(content=all_data)
   except Exception as e:
     Log(e)
     raise DbException(LogLevel.Critical,e)
+
