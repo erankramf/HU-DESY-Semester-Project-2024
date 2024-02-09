@@ -3,8 +3,12 @@ from pymongo.server_api import ServerApi
 from fastapi.responses import JSONResponse
 from bson import ObjectId
 
-from Backend.Logger import Log, LogLevel
 
+#from Backend.Logger import Log, LogLevel
+from Logger import Log, LogLevel
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 uri = "mongodb://read:XgFXpjCQZznKddf4KvtW@cta-simpipe-protodb.zeuthen.desy.de/?authMechanism=DEFAULT&authSource=admin&tls=true"
@@ -73,7 +77,8 @@ async def db_get_versions_by_telescope_and_param(TelName: str, Param: str) -> li
       Log(e)
       raise DbException(LogLevel.Critical,e)
 
-async def db_get_data(TelName : str, Param : str, Version : str) -> dict:
+async def db_get_data(TelName : str, Param : str, Versions : list[str]) -> list[dict[str,any]]:
+  logging.debug('info logging please')
   try:
     data = telescopes_collection.find({'Telescope' : TelName, 'Parameter' : Param, 'Version': {'$in': Versions}})
 
