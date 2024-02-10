@@ -45,9 +45,10 @@ async def get_telescope_versions(tel_name: str, param: str):
     response = await serv_get_versions_by_telescope_and_param(tel_name, param)
     return response
 
-@app.get("/Telescopes/{telName}/{param}/Versions")
-async def get_data(telName: str, param: str, Versions: list[str] = Query(...)):
-    response = await serv_get_data(telName, param, Versions)
+@app.get("/Telescopes/{telName}/{param}/{Versions}")
+async def get_data(telName: str, param: str, Versions: str):
+    versions_list = Versions.split(",")
+    response = await serv_get_data(telName, param, versions_list)
     return response
 
 #Press the green button in the gutter to run the script.
