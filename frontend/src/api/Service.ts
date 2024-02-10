@@ -16,6 +16,7 @@ export const getVersions = (telescopeName: string, parameterName: string) => {
 }
 
 export const getData = (telName: string, param: string, versions: string[]) => {
+    //!!check if the list is empty!!
     const versionsQueryParam = versions.join(',');
     console.log(versions);
     return instance.get(`/Telescopes/${telName}/${param}/${versionsQueryParam}`);

@@ -19,6 +19,7 @@ app.add_middleware(
 )
 
 #this is stuff for the list-parameter in the swagger ui, to make sure we can receive it correctly
+#it looks like we wont need this now but i'll still leave it here for now
 cd = os.path.dirname(os.path.abspath(__file__))
 yaml_path = os.path.join(cd, "swagger_list.yaml")
 
