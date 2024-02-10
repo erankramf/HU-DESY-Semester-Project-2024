@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Autocomplete, Box, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from "@mui/material"
+import { Autocomplete, Box, Button, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from "@mui/material"
 import { useState } from 'react';
 
 
@@ -11,6 +11,19 @@ interface Props {
 
 export const ClickableListMultiple = ({ items, title, onChoseItem }: Props) => {
     const [searchedValue, setSearchedValue] = useState("");
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+    const handleItemClick = (item: string) => {
+        const updatedSelectedItems = selectedItems.includes(item)
+            ? selectedItems.filter(selectedItem => selectedItem !== item)
+            : [...selectedItems, item];
+        setSelectedItems(updatedSelectedItems);
+    };
+
+    const handleFinishSelection = () => {
+        onChoseItem(selectedItems);
+    };
+
     return <>
         <Typography variant='h4' align='center'>{title}</Typography>
         <Autocomplete
@@ -32,10 +45,10 @@ export const ClickableListMultiple = ({ items, title, onChoseItem }: Props) => {
         }}>
             <List sx={{ p: 1, height: 1 }}>
                 {items.map((item) => (item.includes(searchedValue) &&
-                    <ListItem key={item} sx={{ p: 0, width: 1 }}>
+                    <ListItem key={item} sx={{ p: 0, width: 1, backgroundColor: selectedItems.includes(item) ? 'lightblue' : 'inherit' }}>
                         <ListItemButton sx={{ p: 0, width: 1 }} onClick={() => {
                             console.log(item);
-                            onChoseItem([item]);
+                            handleItemClick(item);
                         }}>
                             <ListItemText sx={{ p: 0, width: 1 }} primary={item}></ListItemText>
                         </ListItemButton>
@@ -43,5 +56,6 @@ export const ClickableListMultiple = ({ items, title, onChoseItem }: Props) => {
                 ))}
             </List>
         </Box>
+        <Button variant="contained" onClick={handleFinishSelection}>Search</Button>
     </>
 }
