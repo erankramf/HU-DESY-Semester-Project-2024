@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 from bson import ObjectId
 
 
-#from Backend.Logger import Log, LogLevel
 from Logger import Log, LogLevel
 
 
