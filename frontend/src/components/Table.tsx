@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
-const DataTable = (data:any) => {
+const DataTable = (data: any) => {
   // Assuming data is an array of objects with keys representing table columns
   const columns = Object.keys(data[0]);
 
@@ -16,7 +16,7 @@ const DataTable = (data:any) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row:any, index:any) => (
+          {data.map((row: any, index: any) => (
             <TableRow key={index}>
               {columns.map((column) => (
                 <TableCell key={column}>{row[column]}</TableCell>
