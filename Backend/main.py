@@ -19,6 +19,7 @@ app.add_middleware(
 )
 
 #this is stuff for the list-parameter in the swagger ui, to make sure we can receive it correctly
+#it looks like we wont need this now but i'll still leave it here for now
 cd = os.path.dirname(os.path.abspath(__file__))
 yaml_path = os.path.join(cd, "swagger_list.yaml")
 
@@ -45,9 +46,10 @@ async def get_telescope_versions(tel_name: str, param: str):
     response = await serv_get_versions_by_telescope_and_param(tel_name, param)
     return response
 
-@app.get("/Telescopes/{telName}/{param}/Versions")
-async def get_data(telName: str, param: str, Versions: list[str] = Query(...)):
-    response = await serv_get_data(telName, param, Versions)
+@app.get("/Telescopes/{telName}/{param}/{Versions}")
+async def get_data(telName: str, param: str, Versions: str):
+    versions_list = Versions.split(",")
+    response = await serv_get_data(telName, param, versions_list)
     return response
 
 #Press the green button in the gutter to run the script.
