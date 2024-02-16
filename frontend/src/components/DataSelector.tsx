@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { ClickableList } from "./ClickableList"
 import { getData, getParams, getTelescopes, getVersions } from "../api/Service"
-import { Box, Grid } from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material"
 import DataTable from "./Table"
 
 
@@ -54,7 +54,7 @@ export const DataSelector = (props: Props) => {
       console.log(value);
       console.log(JSON.stringify(value.data, null, 2));
       setData(value.data); // Store received data in state
-      props.onGotData(JSON.stringify(value.data, null, 2));
+      //props.onGotData(JSON.stringify(value.data, null, 2));
     }).catch(err =>
       console.log(err));
   }
@@ -70,7 +70,7 @@ export const DataSelector = (props: Props) => {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        <ClickableList items={telescopesList} title='Telescopes' onChoseItem={pickedTelescope} >
+        <ClickableList items={telescopesList} title='Telescopes' titleStyle={{ fontSize: '24px' }} onChoseItem={pickedTelescope} >
         </ClickableList>
       </Grid>
       <Grid item xs={4} sx={{
@@ -79,7 +79,7 @@ export const DataSelector = (props: Props) => {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        <ClickableList items={paramsList} title='Parameters' onChoseItem={pickedParam} >
+        <ClickableList items={paramsList} title='Parameters' titleStyle={{ fontSize: '24px' }} onChoseItem={pickedParam} >
         </ClickableList>
       </Grid>
       <Grid item xs={4} sx={{
@@ -88,10 +88,14 @@ export const DataSelector = (props: Props) => {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        <ClickableList items={versionList} title='Versions' onChoseItem={pickedVersion} >
+        <ClickableList items={versionList} title='Versions' titleStyle={{ fontSize: '24px' }} onChoseItem={pickedVersion} >
         </ClickableList>
       </Grid>
     </Grid>
-    {data && <DataTable data={data} />}
+    <Grid item xs={7}>
+      <Box sx={{ backgroundColor: '#f0f0f0' }}>
+        {data && <DataTable document={data} />}
+      </Box>
+    </Grid>
   </>
 }
