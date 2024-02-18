@@ -3,6 +3,7 @@ import { ClickableList } from "./ClickableList"
 import { getData, getParams, getTelescopes, getVersions } from "../api/Service"
 import { Box, Grid, Typography } from "@mui/material"
 import DataTable from "./Table"
+import CollapsibleComponent from "./collapsible";
 
 
 interface Props {
@@ -93,9 +94,11 @@ export const DataSelector = (props: Props) => {
       </Grid>
     </Grid>
     <Grid item xs={7}>
-      <Box sx={{ backgroundColor: '#f0f0f0' }}>
-        {data && <DataTable document={data} />}
-      </Box>
+      <CollapsibleComponent title="Data Table">
+        <Box sx={{ backgroundColor: '#f0f0f0' }}>
+          {data && <DataTable document={data} />}
+        </Box>
+      </CollapsibleComponent>
     </Grid>
   </>
 }
