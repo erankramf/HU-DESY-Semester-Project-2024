@@ -4,6 +4,7 @@ import { getData, getParams, getTelescopes, getVersions } from "../api/Service"
 import { Box, Grid, Typography } from "@mui/material"
 import DataTable from "./Table"
 import CollapsibleComponent from "./collapsible";
+import { ClickableListMultiple } from "./ClickableListPlus"
 
 
 interface Props {
@@ -14,6 +15,7 @@ export const DataSelector = (props: Props) => {
   const [telescopeName, setTelescopeName] = useState("");
   const [parameterName, setParameterName] = useState("");
   const [paramsList, setParamsList] = useState([""]);
+
   const [versionName, setVersionName] = useState("");
   const [versionList, setVersionList] = useState([""]);
   const [data, setData] = useState<any>(null); //state to store the data in
@@ -34,10 +36,7 @@ export const DataSelector = (props: Props) => {
     getParams(telName).then(value => {
       console.log(value);
       setParamsList(value.data);
-    }).catch(err =>
-      console.log(err));
-  }
-
+      
   const pickedParam = (paramName: string) => {
     setParameterName(paramName);
     setVersionList([]);
@@ -45,17 +44,13 @@ export const DataSelector = (props: Props) => {
     getVersions(telescopeName, paramName).then(value => {
       console.log(value);
       setVersionList(value.data);
-    }).catch(err =>
-      console.log(err));
-  }
 
-  const pickedVersion = (verName: string) => {
+  const pickedVersions = (verName: string[]) => {
     setVersionName(verName);
     getData(telescopeName, parameterName, verName).then(value => {
       console.log(value);
       console.log(JSON.stringify(value.data, null, 2));
-      setData(value.data); // Store received data in state
-      //props.onGotData(JSON.stringify(value.data, null, 2));
+      props.onGotData(JSON.stringify(value.data, null, 2));
     }).catch(err =>
       console.log(err));
   }
@@ -81,6 +76,7 @@ export const DataSelector = (props: Props) => {
         overflow: "hidden",
       }}>
         <ClickableList items={paramsList} title='Parameters' titleStyle={{ fontSize: '24px' }} onChoseItem={pickedParam} >
+
         </ClickableList>
       </Grid>
       <Grid item xs={4} sx={{
@@ -89,8 +85,8 @@ export const DataSelector = (props: Props) => {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        <ClickableList items={versionList} title='Versions' titleStyle={{ fontSize: '24px' }} onChoseItem={pickedVersion} >
-        </ClickableList>
+        <ClickableListMultiple items={versionList} title='Versions' titleStyle={{ fontSize: '24px' }} onChoseItem={pickedVersions} >
+        </ClickableListMultiple>
       </Grid>
     </Grid>
     <Grid item xs={7}>
