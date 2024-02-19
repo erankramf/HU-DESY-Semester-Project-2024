@@ -1,0 +1,13 @@
+paths:
+  /moreTelescopes/{telName}/{param}/Versions:
+    get:
+      parameters:
+        - in: query
+          description: ""
+          name: Versions
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true

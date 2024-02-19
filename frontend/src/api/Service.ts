@@ -15,8 +15,13 @@ export const getVersions = (telescopeName: string, parameterName: string) => {
     return instance.get(`/Telescopes/${telescopeName}/${parameterName}`);
 }
 
-export const getData = (telName: string, param: string, version: string) => {
-    if (version === null) {
+
+export const getData = (telName: string, param: string, versions: string[]) => {
+    if (versions === null) {
         return console.error("you have to pick a version");
-    } else return instance.get(`/Telescopes/${telName}/${param}/${version}`)
+    } else {
+        const versionsQueryParam = versions.join(',');
+        console.log(versions);
+        return instance.get(`/Telescopes/${telName}/${param}/${versionsQueryParam}`);
+    }
 }
