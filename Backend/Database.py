@@ -2,6 +2,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.server_api import ServerApi
 from fastapi.responses import JSONResponse
 from bson import ObjectId
+from io import StringIO
+import pandas as pd
 
 
 from Logger import Log, LogLevel
@@ -87,4 +89,17 @@ async def db_get_data(TelName : str, Param : str, Versions : list[str]) -> list[
   except Exception as e:
     Log(e)
     raise DbException(LogLevel.Critical,e)
+  
+
+  async def db_save_csv_data(file_contents: bytes, collection):
+    try:
+        
+        decoded = file_contents.decode('utf-8')
+        df = pd.read_csv(StringIO(decoded))
+        data_to_save = df.to_dict(orient='records')
+        collection.insert_many(data_to_save)
+
+        return {"message": "CSV file data saved to MongoDB successfully"}
+    except Exception as e:
+        raise DbException(f"Failed to process CSV file: {str(e)}")
 

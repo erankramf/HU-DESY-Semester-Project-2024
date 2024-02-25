@@ -1,10 +1,13 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import UploadFile,File
+
 
 from fastapi.openapi.utils import get_openapi
 import uvicorn, yaml, os, logging
 from Database import print_client
-from Service import serv_get_telescopes, serv_get_params_by_telescope_name, serv_get_versions_by_telescope_and_param, serv_get_data
+from Service import serv_get_telescopes, serv_get_params_by_telescope_name, serv_get_versions_by_telescope_and_param, serv_get_data,serv_save_csv_data
+from Database import client, db
 
 app = FastAPI()
 
@@ -52,6 +55,15 @@ async def get_data(telName: str, param: str, Versions: str):
     response = await serv_get_data(telName, param, versions_list)
     return response
 
+@app.post("/Telescopes/upload-csv/")
+async def upload_csv(file: UploadFile = File(...)):
+    try:
+        contents = await file.read()
+        await serv_save_csv_data(contents, db['name_of_collection'])
+        return {"message": "CSV file uploaded successfully and data saved to MongoDB"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to process CSV file: {str(e)}")
+    
 #Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8000)
