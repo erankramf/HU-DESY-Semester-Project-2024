@@ -7,16 +7,18 @@ interface DataItem {
 }
 
 interface Props {
-  document: any;
+  document: DataItem[];
 }
 
 const DataTable: React.FC<Props> = ({ document }) => {
   const convertDocumentToArray = (document: any): DataItem[] => {
     const { Parameter, Value } = document;
+    console.log(document);
+    console.log([{ Parameter, Value }]);
     return [{ Parameter, Value }];
   };
 
-  const data = convertDocumentToArray(document);
+  const data = document;
 
   return (
     <TableContainer component={Paper}>
@@ -27,13 +29,28 @@ const DataTable: React.FC<Props> = ({ document }) => {
             <TableCell>Value</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {data.map((row: DataItem, index: number) => (
+        <TableBody>    
+          {/* <TableRow key={1}>
+              <TableCell>{"Param"}</TableCell>
+              <TableCell>{1}</TableCell>
+          </TableRow>         
+          <TableRow key={2}>
+              <TableCell>{"Param"}</TableCell>
+              <TableCell>{2}</TableCell>
+          </TableRow>          
+          <TableRow key={3}>
+              <TableCell>{"Param"}</TableCell>
+              <TableCell>{3}</TableCell>
+          </TableRow> */}
+          {data.map((row: DataItem, index: number) => 
+          {
+            console.log(`row ${index} is ${row}`)
+            return (
             <TableRow key={index}>
-              <TableCell>{row.Parameter}</TableCell>
+              <TableCell>{row["Parameter"]}</TableCell>
               <TableCell>{row.Value}</TableCell>
             </TableRow>
-          ))}
+          )})}
         </TableBody>
       </Table>
     </TableContainer>
