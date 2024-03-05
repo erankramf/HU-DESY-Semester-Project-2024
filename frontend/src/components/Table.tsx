@@ -30,24 +30,12 @@ const DataTable: React.FC<Props> = ({ document }) => {
           </TableRow>
         </TableHead>
         <TableBody>    
-          {/* <TableRow key={1}>
-              <TableCell>{"Param"}</TableCell>
-              <TableCell>{1}</TableCell>
-          </TableRow>         
-          <TableRow key={2}>
-              <TableCell>{"Param"}</TableCell>
-              <TableCell>{2}</TableCell>
-          </TableRow>          
-          <TableRow key={3}>
-              <TableCell>{"Param"}</TableCell>
-              <TableCell>{3}</TableCell>
-          </TableRow> */}
           {data.map((row: DataItem, index: number) => 
           {
             console.log(`row ${index} is ${row}`)
             return (
             <TableRow key={index}>
-              <TableCell>{row["Parameter"]}</TableCell>
+              <TableCell>{row.Parameter}</TableCell>
               <TableCell>{row.Value}</TableCell>
             </TableRow>
           )})}
