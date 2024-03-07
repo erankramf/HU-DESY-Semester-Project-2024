@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Autocomplete, Box, Button, List, ListItem, ListItemButton, ListItemText, TextField, Typography } from "@mui/material"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 interface Props {
@@ -12,6 +12,9 @@ interface Props {
 export const ClickableListMultiple = ({ items, title, onChoseItem }: Props) => {
     const [searchedValue, setSearchedValue] = useState("");
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+    useEffect(() => setSelectedItems([]), [items]);
+
 
     const handleItemClick = (item: string) => {
         const updatedSelectedItems = selectedItems.includes(item)
