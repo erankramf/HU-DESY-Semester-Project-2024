@@ -17,7 +17,6 @@ export const DataSelector = (props: Props) => {
 
   const getTelescopeList = () => {
     getTelescopes().then(value => {
-      console.log(value)
       setTelescopesList(value.data);
     }).catch(err =>
       console.log(err));
@@ -29,7 +28,6 @@ export const DataSelector = (props: Props) => {
     setVersionList([]);
     props.onGotData("");
     getParams(telName).then(value => {
-      console.log(value);
       setParamsList(value.data);
     }).catch(err =>
       console.log(err));
@@ -40,7 +38,6 @@ export const DataSelector = (props: Props) => {
     setVersionList([]);
     props.onGotData("");
     getVersions(telescopeName, paramName).then(value => {
-      console.log(value);
       setVersionList(value.data);
     }).catch(err =>
       console.log(err));
@@ -49,9 +46,7 @@ export const DataSelector = (props: Props) => {
   const pickedVersions = (verName: string[]) => {
     setVersionName(verName);
     getData(telescopeName, parameterName, verName).then(value => {
-      console.log(value);
-      console.log(JSON.stringify(value.data, null, 2));
-      props.onGotData(JSON.stringify(value.data, null, 2));
+      props.onGotData(value.data);
     }).catch(err =>
       console.log(err));
   }
