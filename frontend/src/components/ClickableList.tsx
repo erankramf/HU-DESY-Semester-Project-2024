@@ -11,6 +11,8 @@ interface Props {
 
 export const ClickableList = ({items,title,onChoseItem}:Props) => {
     const [searchedValue, setSearchedValue] = useState("");
+    const [selectedValue, setSelectedValue] = useState("");
+
     return <>
         <Typography variant='h4' align='center'>{title}</Typography>
         <Autocomplete 
@@ -31,9 +33,10 @@ export const ClickableList = ({items,title,onChoseItem}:Props) => {
             overflowY: "auto",}}>
             <List sx={{p:1, height:1}}>
                 {items.map((item)=>(item.includes(searchedValue) &&
-                    <ListItem key={item} sx={{p:0, width:1}}>
+                    <ListItem key={item} sx={{p:0, width:1, backgroundColor: selectedValue == item ? 'lightblue' : 'inherit'}}>
                         <ListItemButton sx={{p:0, width:1}} onClick={() => {
                             console.log(item);
+                            setSelectedValue(item);
                             onChoseItem(item);
                             }}>
                             <ListItemText sx={{p:0, width:1}} primary={item}></ListItemText>
