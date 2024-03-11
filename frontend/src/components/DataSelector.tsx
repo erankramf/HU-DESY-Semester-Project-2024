@@ -92,7 +92,7 @@ export const DataSelector = (props: Props) => {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        {<MetaTable title='Metadata' document={data} />}
+        <MetaTable title='Metadata' document={data} />
       </Grid>
     </Grid>
   </>
