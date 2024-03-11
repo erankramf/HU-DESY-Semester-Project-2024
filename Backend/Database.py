@@ -1,8 +1,8 @@
-from motor.motor_asyncio import AsyncIOMotorClient
+from motor.motor_asyncio import AsyncIOMotorClient,AsyncIOMotorGridFSBucket
 from pymongo.server_api import ServerApi
 from fastapi.responses import JSONResponse
-from bson import ObjectId
-
+from bson.json_util import dumps
+from io import BytesIO
 
 from Logger import Log, LogLevel
 
@@ -13,11 +13,31 @@ uri = "mongodb://read:XgFXpjCQZznKddf4KvtW@cta-simpipe-protodb.zeuthen.desy.de/?
 client = AsyncIOMotorClient(uri, server_api=ServerApi('1'))
 # Not quite sure these are what we need, but we can work with that and maybe change later.
 db = client["CTA-Simulation-Model"]
+fs = AsyncIOMotorGridFSBucket(db)
 telescopes_collection = db["telescopes"]
 
 class DbException(Exception):
     pass
 
+async def db_get_file_as_string(FileName:str) -> str: 
+  try:
+    with BytesIO() as output:
+      await fs.download_to_stream_by_name(FileName,output)
+      outputText = output.getvalue()
+      return outputText
+  except Exception as e:
+    Log(LogLevel.Critical,e)
+    raise DbException(e)
+
+async def db_get_file_for_download(FileName:str):
+  try:
+    grid_out = await fs.open_download_stream_by_name(FileName,revision=0)
+    # res = await grid_out.read()
+    return grid_out.__iter__()
+  except Exception as e:
+    Log(LogLevel.Critical,e)
+    raise DbException(e)
+  
 async def ping_server():
   # Send a ping to confirm a successful connection
   try:
@@ -79,11 +99,7 @@ async def db_get_data(TelName : str, Param : str, Versions : list[str]) -> list[
     data = telescopes_collection.find({'Telescope' : TelName, 'Parameter' : Param, 'Version': {'$in': Versions}})
 
     all_data = await data.to_list(length = None)
-
-    for data in all_data:
-      data['_id'] = str(data['_id'])
-
-    return JSONResponse(content=all_data)
+    return all_data
   except Exception as e:
     Log(e)
     raise DbException(LogLevel.Critical,e)
