@@ -21,3 +21,7 @@ export const getData = (telName: string, param: string, versions: string[]) => {
     console.log(versions);
     return instance.get(`/Telescopes/${telName}/${param}/${versionsQueryParam}`);
 }
+
+export const getFile = (fileName: string) =>{
+    return instance.get(`/Files/${fileName}`,{responseType:'blob',timeout:10000000})
+}

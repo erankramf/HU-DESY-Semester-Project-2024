@@ -33,7 +33,7 @@ export const ClickableList = ({items,title,onChoseItem}:Props) => {
             overflowY: "auto",}}>
             <List sx={{p:1, height:1}}>
                 {items.map((item)=>(item.includes(searchedValue) &&
-                    <ListItem key={item} sx={{p:0, width:1, backgroundColor: selectedValue == item ? 'lightblue' : 'inherit'}}>
+                    <ListItem key={item} sx={{p:0, width:1, backgroundColor: (items.length > 1 && selectedValue == item) ? 'lightblue' : 'inherit'}}>
                         <ListItemButton sx={{p:0, width:1}} onClick={() => {
                             console.log(item);
                             setSelectedValue(item);

@@ -13,7 +13,6 @@ export const DataSelector = (props: Props) => {
   const [telescopeName, setTelescopeName] = useState("");
   const [parameterName, setParameterName] = useState("");
   const [paramsList, setParamsList] = useState([""]);
-  const [versionName, setVersionName] = useState([""]);
   const [versionList, setVersionList] = useState([""]);
   const [data, setData] = useState<any[]>([""]);
 
@@ -46,7 +45,6 @@ export const DataSelector = (props: Props) => {
   }
 
   const pickedVersions = (verName: string[]) => {
-    setVersionName(verName);
     getData(telescopeName, parameterName, verName).then(value => {
       setData(value.data);
       props.onGotData(value.data);
