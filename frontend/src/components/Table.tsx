@@ -14,12 +14,6 @@ interface Props {
 }
 
 const DataTable: React.FC<Props> = ({ document: data, shouldLink }) => {
-  const convertDocumentToArray = (document: any): DataItem[] => {
-    const { Parameter, Value } = document;
-    console.log(document);
-    console.log([{ Parameter, Value }]);
-    return [{ Parameter, Value }];
-  };
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -39,13 +33,13 @@ const DataTable: React.FC<Props> = ({ document: data, shouldLink }) => {
               <TableCell>{row.Value}{shouldLink && <Button startIcon={<DownloadIcon></DownloadIcon>}  onClick={async ()=> {try {
                   const response = await getFile(row.Value);
                   const url = URL.createObjectURL(response.data);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = `${row.Value}`;
-                  a.style.display = 'none';
-                  document.body.appendChild(a);
-                  a.click();
-                  a.remove();
+                  const element = document.createElement('a');
+                  element.href = url;
+                  element.download = `${row.Value}`;
+                  element.style.display = 'none';
+                  document.body.appendChild(element);
+                  element.click();
+                  element.remove();
                   URL.revokeObjectURL(url);
 
                   return console.log(response);

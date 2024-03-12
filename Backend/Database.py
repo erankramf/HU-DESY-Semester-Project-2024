@@ -32,7 +32,6 @@ async def db_get_file_as_string(FileName:str) -> str:
 async def db_get_file_for_download(FileName:str):
   try:
     grid_out = await fs.open_download_stream_by_name(FileName,revision=0)
-    # res = await grid_out.read()
     return grid_out.__iter__()
   except Exception as e:
     Log(LogLevel.Critical,e)
